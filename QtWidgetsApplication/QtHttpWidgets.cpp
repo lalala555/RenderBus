@@ -21,7 +21,6 @@ void QtHttpWidgets::on_finished()
 	downloadedFile = Q_NULLPTR;
 	reply->deleteLater();
 	reply = Q_NULLPTR;
-
 }
 
 void QtHttpWidgets::on_readyRead()

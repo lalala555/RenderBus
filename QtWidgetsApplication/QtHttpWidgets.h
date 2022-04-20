@@ -13,14 +13,15 @@ class QtHttpWidgets : public QWidget
 public:
 	QtHttpWidgets(QWidget *parent = Q_NULLPTR);
 	~QtHttpWidgets();
+
 public slots:
-void on_finished();
-void on_readyRead();
-void on_downloadProgress(qint64 bytesRead, qint64 totalBytes);
+	void on_finished();
+	void on_readyRead();
+	void on_downloadProgress(qint64 bytesRead, qint64 totalBytes);
 
-void on_pushButton_clicked();
+	void on_pushButton_clicked();
 
-void on_pushButton_2_clicked();
+	void on_pushButton_2_clicked();
 
 
 

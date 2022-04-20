@@ -16,6 +16,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -26,6 +27,7 @@ public:
     QLineEdit *lineEdit_user;
     QLineEdit *lineEdit_2;
     QPushButton *pushButton_3;
+    QTableWidget *tableWidget;
 
     void setupUi(QWidget *QtWidgetsClass)
     {
@@ -41,6 +43,9 @@ public:
         pushButton_3 = new QPushButton(QtWidgetsClass);
         pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
         pushButton_3->setGeometry(QRect(20, 110, 61, 23));
+        tableWidget = new QTableWidget(QtWidgetsClass);
+        tableWidget->setObjectName(QStringLiteral("tableWidget"));
+        tableWidget->setGeometry(QRect(100, 20, 331, 261));
 
         retranslateUi(QtWidgetsClass);
 
