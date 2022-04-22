@@ -1,8 +1,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-<Qt_DEFINES_>UNICODE;_UNICODE;WIN32;WIN64;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB</Qt_DEFINES_>
-<Qt_INCLUDEPATH_>D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtWidgets;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtGui;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtANGLE;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtCore;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\mkspecs\win32-msvc</Qt_INCLUDEPATH_>
-<Qt_LIBS_>D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib\qtmaind.lib;shell32.lib;Qt5Cored.lib;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib\Qt5Widgetsd.lib;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib\Qt5Guid.lib;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib\Qt5Cored.lib</Qt_LIBS_>
+<Qt_DEFINES_>UNICODE;_UNICODE;WIN32;WIN64;QT_WIDGETS_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB</Qt_DEFINES_>
+<Qt_INCLUDEPATH_>D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtWidgets;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtGui;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtANGLE;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtNetwork;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtCore;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\mkspecs\win32-msvc</Qt_INCLUDEPATH_>
+<Qt_LIBS_>D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib\qtmaind.lib;shell32.lib;Qt5Cored.lib;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib\Qt5Widgetsd.lib;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib\Qt5Guid.lib;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib\Qt5Networkd.lib;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib\Qt5Cored.lib</Qt_LIBS_>
 <Qt_LIBPATH_>D:\qt\Qt5.9.8\5.9.8\msvc2015_64\lib;C:\openssl\lib;C:\Utils\my_sql\my_sql\lib;C:\Utils\postgresql\pgsql\lib</Qt_LIBPATH_>
 <QMake_QT_SYSROOT_></QMake_QT_SYSROOT_>
 <QMake_QT_INSTALL_PREFIX_>D:/qt/Qt5.9.8/5.9.8/msvc2015_64</QMake_QT_INSTALL_PREFIX_>
@@ -34,7 +34,7 @@
     <QtBkup_QtInstall
       >5.9.8_msvc2015_64</QtBkup_QtInstall>
     <QtBkup_QtModules
-      >core;gui;widgets</QtBkup_QtModules>
+      >core;gui;widgets;network</QtBkup_QtModules>
     <QtBkup_QtPathBinaries
       >bin</QtBkup_QtPathBinaries>
     <QtBkup_QtPathLibraryExecutables

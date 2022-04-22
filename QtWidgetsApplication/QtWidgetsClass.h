@@ -6,6 +6,9 @@
 #include <QtNetwork\QNetworkReply>
 #include <QtNetwork\QNetworkRequest>
 #include <QtWebSockets\QWebSocket>
+#include <QtWebSockets\QWebSocketServer>
+#include "QServer.h"
+#include <QtNetWork/QAbstractSocket>
 
 typedef struct FileData
 {
@@ -58,15 +61,18 @@ public slots:
 	void readyReadThree();
 
 	void slotError(QNetworkReply::NetworkError);
-	void slotSslErrors(QList<QSslError>);
+	void slotSslErrors(const QList<QSslError> &);
 
 	//websocket部分
 	void onConnected();
 
 	void onDisconnected();
 
-	void onTextReceived();
+	void onTextReceived(const QByteArray &data);
 
+	void onTextMessageReceived(const QString& data);
+ 
+	void slotError(QAbstractSocket::SocketError error); // 响应报错
 
 
 private:
@@ -77,7 +83,9 @@ private:
 	QNetworkReply *m_Reply2;
 	QNetworkRequest *m_Request;
 	QWebSocket  *m_websocket;
+	QWebSocketServer * m_serversocket;
 	QString m_username;
 	QString m_password;
+	QString m_raySyncUserKey;
 	QUrl url;
 };

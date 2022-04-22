@@ -9,6 +9,8 @@
 #include <qurlquery.h>
 #include "QtTipsDialog.h"
 #include <QFileDialog>
+#include "QServer.h"
+
 
 
 QtWidgetsClass::QtWidgetsClass(QWidget *parent)
@@ -16,18 +18,29 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent)
 {
 	ui.setupUi(this);
 
-
+	ui.lineEdit_user->setText("TD_MAX");
+	ui.lineEdit_2->setText("Abc123456");
 
 	m_Request = new QNetworkRequest;
 	m_Manager = new QNetworkAccessManager;
 	m_websocket = new QWebSocket;
+	//m_serversocket = new QWebSocketServer("server", QWebSocketServer::NonSecureMode);
+	//m_serversocket->listen(QHostAddress::Any, 2121);
+	connect(m_serversocket, SIGNAL(newConnection()), this, SLOT(slotNewConnect()));
+
 	connect(m_Manager, SIGNAL(finished(QNetworkReply *reply)), this, SLOT(on_finished(QNetworkReply *reply)));
 
 	connect(m_websocket, SIGNAL(disconnected()), this, SLOT(onDisconnected()), Qt::AutoConnection);
 
-	connect(m_websocket, SIGNAL(textMessageReceived(QString)), this, SLOT(onTextReceived(QString)), Qt::AutoConnection);
-
 	connect(m_websocket, SIGNAL(connected()), this, SLOT(onConnected()), Qt::AutoConnection);
+
+	connect(m_websocket, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(slotSslErrors(const QList<QSslError> &)), Qt::AutoConnection);
+
+	connect(m_websocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
+
+	connect(m_websocket, SIGNAL(binaryMessageReceived(const QByteArray&)), this, SLOT(onTextReceived(const QByteArray&)));
+
+	connect(m_websocket, SIGNAL(textMessageReceived(const QString&)), this, SLOT(onTextMessageReceived(const QString&)));
 
 	m_Reply = Q_NULLPTR;
 	Init();
@@ -173,13 +186,15 @@ void QtWidgetsClass::getUserDirFile(QUrl & u, QString userkey)
 void QtWidgetsClass::showTable(QList<FileData>& datalist)
 {
 	ui.tableWidget->setRowCount(datalist.size());
-	ui.tableWidget->setColumnCount(4);
+	ui.tableWidget->setColumnCount(5);
 	/*QList<QString> collist;
 	collist.append("文件名");
 	collist.append("文件大小");
 	collist.append("最后修改时间");
 	collist.append("文件类型");
 	ui.tableWidget->setHorizontalHeaderLabels(collist);*/
+//	QTableWidgetItem *item = new QTableWidgetItem(QString(""));
+	//ui.tableWidget->item(row, col)->setCheckState(Qt::Unchecked);
 
 	for (int i = 0; i < datalist.size(); i++)
 	{
@@ -187,10 +202,13 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 		QString fileSize = datalist.at(i).fileSize;
 		QString lastModify = datalist.at(i).lastModify;
 		QString fileType = datalist.at(i).fileType;
-		ui.tableWidget->setItem(i, 0,  new QTableWidgetItem(fileName));
-		ui.tableWidget->setItem(i, 1, new QTableWidgetItem(fileSize));
-		ui.tableWidget->setItem(i, 2, new QTableWidgetItem(lastModify));
-		ui.tableWidget->setItem(i, 3, new QTableWidgetItem(fileType));
+		ui.tableWidget->setItem(i, 0, new QTableWidgetItem(""));
+		ui.tableWidget->setItem(i, 1,  new QTableWidgetItem(fileName));
+		ui.tableWidget->setItem(i, 2, new QTableWidgetItem(fileSize));
+		ui.tableWidget->setItem(i, 3, new QTableWidgetItem(lastModify));
+		ui.tableWidget->setItem(i, 4, new QTableWidgetItem(fileType));
+		ui.tableWidget->item(i, 0)->setCheckState(Qt::Unchecked);
+		
 
 	}
 	ui.tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -198,8 +216,8 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 
 void QtWidgetsClass::connectToServer()
 {
-	//QString path = "wss://local.raysync.cn:9527/"; 
-	QString path = "wss://127.0.0.1:2121";
+	QString path = "wss://local.raysync.cn:9527/"; 
+	//QString path = "wss://127.0.0.1:2121";
 	QUrl url = QUrl(path);
 	m_websocket->open(url);
 }
@@ -226,11 +244,14 @@ void QtWidgetsClass::on_pushButton_clicked()
 {
 	//QtTipsDialog *dialog = new QtTipsDialog;
 	//dialog->show();
-	QString filepath = QFileDialog::getExistingDirectory();
-		if (filepath == NULL)
-			return;
+	//QString filepath = QFileDialog::getExistingDirectory();
+	//	if (filepath == NULL)
+	//		return;
 	//开启服务端连接
-		connectToServer();
+	//	QServer server(this);
+	//	server.startListen();
+	connectToServer();
+
 
 }
 
@@ -335,6 +356,7 @@ void QtWidgetsClass::readyReadTwo()
 		QJsonObject arrObj = rootObj.value("data").toObject();
 		//获得userkey
 		QString userkey = arrObj.value("userKey").toString();
+		m_raySyncUserKey = arrObj.value("raySyncUserKey").toString();
 		QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
 		getUserDirFile(u, userkey);
 	}
@@ -395,23 +417,89 @@ void QtWidgetsClass::slotError(QNetworkReply::NetworkError err)
 	qDebug() << "get ready,read size:";
 }
 
-void QtWidgetsClass::slotSslErrors(QList<QSslError> errs)
+void QtWidgetsClass::slotError(QAbstractSocket::SocketError error)
+{
+	qDebug() << __FILE__ << __LINE__ << (int)error << m_websocket->errorString();
+}
+
+
+void QtWidgetsClass::slotSslErrors( const QList<QSslError> &errs)
 {
 	qDebug() << "get ready,read size:";
 }
 
 void QtWidgetsClass::onConnected()
 {
+	
+
 	QString aa = "success";
 	qDebug() << aa;
+	QString password = QString("%1&2&2&12345678").arg(m_raySyncUserKey);
+	QJsonDocument doc;
+	QJsonObject jsonData;
+	jsonData.insert("action", "login");     
+	jsonData.insert("language", "zh-CN");
+	jsonData.insert("pass_word", password);
+	jsonData.insert("proxy_ip", "render.raysync.cn");
+	jsonData.insert("proxy_port", 32001);
+	jsonData.insert("server5_port", 2442);
+	jsonData.insert("server5_ssl_port",2443);
+	jsonData.insert("server_ip", "127.0.0.1");
+	jsonData.insert("server_port", 2121);
+	jsonData.insert("user_name", "TD_MAX");
+	
+	doc.setObject(jsonData);
+	QByteArray data;
+	data = doc.toJson(QJsonDocument::Compact);
+	m_websocket->sendBinaryMessage(data);
 }
 
 void QtWidgetsClass::onDisconnected()
 {
-
+	qDebug() << "disconnect";
 }
 
-void QtWidgetsClass::onTextReceived()
+void QtWidgetsClass::onTextReceived(const QByteArray &data)
 {
+	qDebug() << "success";
+	qDebug() << data;
 
+	//解析json
+	QJsonParseError json_error;
+	QJsonDocument jsonDoc(QJsonDocument::fromJson(data, &json_error));
+	if (json_error.error != QJsonParseError::NoError)
+	{
+		return;
+	}
+	QJsonObject rootObj = jsonDoc.object();
+	QString codeStr = rootObj.value("id").toString();
+	if (codeStr != NULL)
+	{
+		QJsonDocument doc1;
+		QJsonObject jsonData1;
+		jsonData1.insert("action", "list");
+		jsonData1.insert("path", "/input/100000849/");
+		doc1.setObject(jsonData1);
+		QByteArray newdata1;
+		newdata1 = doc1.toJson(QJsonDocument::Compact);
+
+		QJsonDocument doc2;
+		QJsonObject jsonData2;
+		jsonData2.insert("action", "upload");
+		jsonData2.insert("full_path", false);
+		jsonData2.insert("path", "/input/100000849/");
+		jsonData2.insert("type", 0);
+		doc2.setObject(jsonData2);
+		QByteArray newdata2;
+		newdata2 = doc2.toJson(QJsonDocument::Compact);
+
+		m_websocket->sendBinaryMessage(newdata1);
+		m_websocket->sendBinaryMessage(newdata2);
+	}
+}
+
+void QtWidgetsClass::onTextMessageReceived(const QString& data)
+{
+	qDebug() << "success";
+	qDebug() << data;
 }

@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_QtWidgetsClass_t {
-    QByteArrayData data[14];
-    char stringdata0[202];
+    QByteArrayData data[17];
+    char stringdata0[244];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -45,7 +45,10 @@ QT_MOC_LITERAL(9, 118, 14), // "readyReadThree"
 QT_MOC_LITERAL(10, 133, 9), // "slotError"
 QT_MOC_LITERAL(11, 143, 27), // "QNetworkReply::NetworkError"
 QT_MOC_LITERAL(12, 171, 13), // "slotSslErrors"
-QT_MOC_LITERAL(13, 185, 16) // "QList<QSslError>"
+QT_MOC_LITERAL(13, 185, 16), // "QList<QSslError>"
+QT_MOC_LITERAL(14, 202, 11), // "onConnected"
+QT_MOC_LITERAL(15, 214, 14), // "onDisconnected"
+QT_MOC_LITERAL(16, 229, 14) // "onTextReceived"
 
     },
     "QtWidgetsClass\0on_pushButton_3_clicked\0"
@@ -53,7 +56,8 @@ QT_MOC_LITERAL(13, 185, 16) // "QList<QSslError>"
     "QNetworkReply*\0reply\0readyRead\0"
     "readyReadTwo\0readyReadThree\0slotError\0"
     "QNetworkReply::NetworkError\0slotSslErrors\0"
-    "QList<QSslError>"
+    "QList<QSslError>\0onConnected\0"
+    "onDisconnected\0onTextReceived"
 };
 #undef QT_MOC_LITERAL
 
@@ -63,7 +67,7 @@ static const uint qt_meta_data_QtWidgetsClass[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -71,14 +75,17 @@ static const uint qt_meta_data_QtWidgetsClass[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   54,    2, 0x0a /* Public */,
-       3,    0,   55,    2, 0x0a /* Public */,
-       4,    1,   56,    2, 0x0a /* Public */,
-       7,    0,   59,    2, 0x0a /* Public */,
-       8,    0,   60,    2, 0x0a /* Public */,
-       9,    0,   61,    2, 0x0a /* Public */,
-      10,    1,   62,    2, 0x0a /* Public */,
-      12,    1,   65,    2, 0x0a /* Public */,
+       1,    0,   69,    2, 0x0a /* Public */,
+       3,    0,   70,    2, 0x0a /* Public */,
+       4,    1,   71,    2, 0x0a /* Public */,
+       7,    0,   74,    2, 0x0a /* Public */,
+       8,    0,   75,    2, 0x0a /* Public */,
+       9,    0,   76,    2, 0x0a /* Public */,
+      10,    1,   77,    2, 0x0a /* Public */,
+      12,    1,   80,    2, 0x0a /* Public */,
+      14,    0,   83,    2, 0x0a /* Public */,
+      15,    0,   84,    2, 0x0a /* Public */,
+      16,    0,   85,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -89,6 +96,9 @@ static const uint qt_meta_data_QtWidgetsClass[] = {
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 11,    2,
     QMetaType::Void, 0x80000000 | 13,    2,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -107,6 +117,9 @@ void QtWidgetsClass::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 5: _t->readyReadThree(); break;
         case 6: _t->slotError((*reinterpret_cast< QNetworkReply::NetworkError(*)>(_a[1]))); break;
         case 7: _t->slotSslErrors((*reinterpret_cast< QList<QSslError>(*)>(_a[1]))); break;
+        case 8: _t->onConnected(); break;
+        case 9: _t->onDisconnected(); break;
+        case 10: _t->onTextReceived(); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -162,13 +175,13 @@ int QtWidgetsClass::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 11;
     }
     return _id;
 }

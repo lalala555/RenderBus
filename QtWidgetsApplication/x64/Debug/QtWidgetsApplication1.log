@@ -1,4 +1,3 @@
-﻿  QtWidgetsClass.cpp
-e:\codetest\displayuserassets\qtwidgetsapplication\QtWidgetsClass.h(16): warning C4091: 'typedef ': ignored on left of 'FileData' when no variable is declared
+﻿  Reading Qt configuration (D:/qt/Qt5.9.8/5.9.8/msvc2015_64/bin/qmake)
   QtWidgetsApplication1.vcxproj -> E:\codetest\displayuserassets\QtWidgetsApplication\x64\Debug\QtWidgetsApplication1.exe
   QtWidgetsApplication1.vcxproj -> E:\codetest\displayuserassets\QtWidgetsApplication\x64\Debug\QtWidgetsApplication1.pdb (Full PDB)

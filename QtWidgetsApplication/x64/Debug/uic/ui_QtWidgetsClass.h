@@ -45,8 +45,8 @@ public:
         pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
         pushButton_3->setGeometry(QRect(20, 110, 61, 23));
         tableWidget = new QTableWidget(QtWidgetsClass);
-        if (tableWidget->columnCount() < 4)
-            tableWidget->setColumnCount(4);
+        if (tableWidget->columnCount() < 5)
+            tableWidget->setColumnCount(5);
         QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
         QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
@@ -55,18 +55,18 @@ public:
         tableWidget->setHorizontalHeaderItem(2, __qtablewidgetitem2);
         QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem3);
+        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem4);
         if (tableWidget->rowCount() < 1)
             tableWidget->setRowCount(1);
-        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        tableWidget->setVerticalHeaderItem(0, __qtablewidgetitem4);
         QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        tableWidget->setItem(0, 0, __qtablewidgetitem5);
+        tableWidget->setVerticalHeaderItem(0, __qtablewidgetitem5);
         QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
-        tableWidget->setItem(0, 1, __qtablewidgetitem6);
+        tableWidget->setItem(0, 2, __qtablewidgetitem6);
         QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
-        tableWidget->setItem(0, 2, __qtablewidgetitem7);
+        tableWidget->setItem(0, 3, __qtablewidgetitem7);
         QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
-        tableWidget->setItem(0, 3, __qtablewidgetitem8);
+        tableWidget->setItem(0, 4, __qtablewidgetitem8);
         tableWidget->setObjectName(QStringLiteral("tableWidget"));
         tableWidget->setGeometry(QRect(120, 50, 461, 301));
         pushButton = new QPushButton(QtWidgetsClass);
@@ -82,13 +82,13 @@ public:
     {
         QtWidgetsClass->setWindowTitle(QApplication::translate("QtWidgetsClass", "QtWidgetsClass", Q_NULLPTR));
         pushButton_3->setText(QApplication::translate("QtWidgetsClass", "\347\231\273\345\275\225", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
+        QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(1);
         ___qtablewidgetitem->setText(QApplication::translate("QtWidgetsClass", "\346\226\207\344\273\266\345\220\215", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(1);
+        QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(2);
         ___qtablewidgetitem1->setText(QApplication::translate("QtWidgetsClass", "\346\226\207\344\273\266\345\244\247\345\260\217", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(2);
+        QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(3);
         ___qtablewidgetitem2->setText(QApplication::translate("QtWidgetsClass", "\346\234\200\345\220\216\344\277\256\346\224\271\346\227\266\351\227\264", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(3);
+        QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(4);
         ___qtablewidgetitem3->setText(QApplication::translate("QtWidgetsClass", "\346\226\207\344\273\266\347\261\273\345\236\213", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem4 = tableWidget->verticalHeaderItem(0);
         ___qtablewidgetitem4->setText(QApplication::translate("QtWidgetsClass", "1", Q_NULLPTR));
