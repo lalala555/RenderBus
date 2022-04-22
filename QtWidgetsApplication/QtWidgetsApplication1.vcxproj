@@ -63,8 +63,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>$(Qt_LIBS_);qt5networkd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(Qt_LIBPATH_);D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtNetwork;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(Qt_LIBS_);qt5networkd.lib;Qt5WebSocketsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(Qt_LIBPATH_);D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtNetwork;D:\qt\Qt5.9.8\5.9.8\msvc2015_64\include\QtWebSockets;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -95,9 +95,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="QtHttpWidgets.cpp" />
+    <ClCompile Include="QtTipsDialog.cpp" />
     <ClCompile Include="QtWidgetsClass.cpp" />
     <QtRcc Include="QtWidgetsApplication1.qrc" />
     <QtUic Include="QtHttpWidgets.ui" />
+    <QtUic Include="QtTipsDialog.ui" />
     <QtUic Include="QtWidgetsApplication1.ui" />
     <QtMoc Include="QtWidgetsApplication1.h" />
     <ClCompile Include="QtWidgetsApplication1.cpp" />
@@ -107,6 +109,7 @@
   <ItemGroup>
     <QtMoc Include="QtWidgetsClass.h" />
     <QtMoc Include="QtHttpWidgets.h" />
+    <QtMoc Include="QtTipsDialog.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

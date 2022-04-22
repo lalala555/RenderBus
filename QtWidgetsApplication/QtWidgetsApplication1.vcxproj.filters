@@ -46,6 +46,9 @@
     <ClCompile Include="QtHttpWidgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QtTipsDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -64,12 +67,18 @@
     <QtMoc Include="QtHttpWidgets.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="QtTipsDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="QtWidgetsClass.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="QtHttpWidgets.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="QtTipsDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

@@ -5,6 +5,7 @@
 #include <QtNetwork\QNetworkAccessManager>
 #include <QtNetwork\QNetworkReply>
 #include <QtNetwork\QNetworkRequest>
+#include <QtWebSockets\QWebSocket>
 
 typedef struct FileData
 {
@@ -35,11 +36,17 @@ public:
 
 	void showTable(QList<FileData> &datalist);
 
+	void connectToServer();
+
+
+
 	
 public slots:
     //µÇÂ¼
     
     void on_pushButton_3_clicked();
+
+	void on_pushButton_clicked();
 
 	void on_finished(QNetworkReply *reply);
 
@@ -53,6 +60,15 @@ public slots:
 	void slotError(QNetworkReply::NetworkError);
 	void slotSslErrors(QList<QSslError>);
 
+	//websocket²¿·Ö
+	void onConnected();
+
+	void onDisconnected();
+
+	void onTextReceived();
+
+
+
 private:
 	Ui::QtWidgetsClass ui;
 	QNetworkAccessManager *m_Manager;
@@ -60,8 +76,8 @@ private:
 	QNetworkReply *m_Reply1;
 	QNetworkReply *m_Reply2;
 	QNetworkRequest *m_Request;
+	QWebSocket  *m_websocket;
 	QString m_username;
 	QString m_password;
 	QUrl url;
-	QString html_text;
 };

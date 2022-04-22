@@ -7,6 +7,8 @@
 #include <QJsonObject>
 #include <QEventLoop>
 #include <qurlquery.h>
+#include "QtTipsDialog.h"
+#include <QFileDialog>
 
 
 QtWidgetsClass::QtWidgetsClass(QWidget *parent)
@@ -18,7 +20,14 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent)
 
 	m_Request = new QNetworkRequest;
 	m_Manager = new QNetworkAccessManager;
+	m_websocket = new QWebSocket;
 	connect(m_Manager, SIGNAL(finished(QNetworkReply *reply)), this, SLOT(on_finished(QNetworkReply *reply)));
+
+	connect(m_websocket, SIGNAL(disconnected()), this, SLOT(onDisconnected()), Qt::AutoConnection);
+
+	connect(m_websocket, SIGNAL(textMessageReceived(QString)), this, SLOT(onTextReceived(QString)), Qt::AutoConnection);
+
+	connect(m_websocket, SIGNAL(connected()), this, SLOT(onConnected()), Qt::AutoConnection);
 
 	m_Reply = Q_NULLPTR;
 	Init();
@@ -165,12 +174,13 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 {
 	ui.tableWidget->setRowCount(datalist.size());
 	ui.tableWidget->setColumnCount(4);
-	QList<QString> collist;
+	/*QList<QString> collist;
 	collist.append("文件名");
 	collist.append("文件大小");
 	collist.append("最后修改时间");
 	collist.append("文件类型");
-	ui.tableWidget->setHorizontalHeaderLabels(collist);
+	ui.tableWidget->setHorizontalHeaderLabels(collist);*/
+
 	for (int i = 0; i < datalist.size(); i++)
 	{
 		QString fileName = datalist.at(i).fileName;
@@ -183,6 +193,15 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 		ui.tableWidget->setItem(i, 3, new QTableWidgetItem(fileType));
 
 	}
+	ui.tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+}
+
+void QtWidgetsClass::connectToServer()
+{
+	//QString path = "wss://local.raysync.cn:9527/"; 
+	QString path = "wss://127.0.0.1:2121";
+	QUrl url = QUrl(path);
+	m_websocket->open(url);
 }
 
 void QtWidgetsClass::on_pushButton_3_clicked()
@@ -201,6 +220,18 @@ void QtWidgetsClass::on_pushButton_3_clicked()
 		QHostAddress aHost = addList.at(i);
 		QString aa = aHost.toString();
 	}*/
+}
+
+void QtWidgetsClass::on_pushButton_clicked()
+{
+	//QtTipsDialog *dialog = new QtTipsDialog;
+	//dialog->show();
+	QString filepath = QFileDialog::getExistingDirectory();
+		if (filepath == NULL)
+			return;
+	//开启服务端连接
+		connectToServer();
+
 }
 
 void QtWidgetsClass::on_finished(QNetworkReply *reply)
@@ -229,8 +260,6 @@ void QtWidgetsClass::on_finished(QNetworkReply *reply)
 
 	}
 	qDebug() << "finished";
-	html_text = bytes;
-	qDebug() << "get ready,read size:" << html_text.size();
 }
 
 void QtWidgetsClass::readyRead()
@@ -337,7 +366,17 @@ void QtWidgetsClass::readyReadThree()
 		{
 			QJsonObject oneObj = arrObj.at(i).toObject();
 			jsondata.fileName = oneObj.value("fileName").toString();
-			jsondata.fileSize = oneObj.value("fileSize").toString();
+			double size = oneObj.value("fileSize").toDouble();
+			jsondata.fileSize = QString::number(size, 'f', 0);
+			if (jsondata.fileSize.size() <= 3) {
+				jsondata.fileSize = QString("%1B").arg(jsondata.fileSize);
+			}
+			else if (jsondata.fileSize.size() > 3 && jsondata.fileSize.size() <= 6) {
+				jsondata.fileSize = QString("%1K").arg(size / 1024.0);
+			}
+			else if (jsondata.fileSize.size() > 6) {
+				jsondata.fileSize = QString("%1M").arg(size / 1024.0 / 1024.0);
+			}
 			jsondata.lastModify = oneObj.value("lastModify").toString();
 			jsondata.fileType = oneObj.value("fileType").toString();
 			datalist.append(jsondata);
@@ -359,4 +398,20 @@ void QtWidgetsClass::slotError(QNetworkReply::NetworkError err)
 void QtWidgetsClass::slotSslErrors(QList<QSslError> errs)
 {
 	qDebug() << "get ready,read size:";
+}
+
+void QtWidgetsClass::onConnected()
+{
+	QString aa = "success";
+	qDebug() << aa;
+}
+
+void QtWidgetsClass::onDisconnected()
+{
+
+}
+
+void QtWidgetsClass::onTextReceived()
+{
+
 }

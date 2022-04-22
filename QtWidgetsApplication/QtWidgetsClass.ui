@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>468</width>
-    <height>401</height>
+    <width>733</width>
+    <height>361</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,11 +49,69 @@
   <widget class="QTableWidget" name="tableWidget">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>20</y>
-     <width>331</width>
-     <height>261</height>
+     <x>120</x>
+     <y>50</y>
+     <width>461</width>
+     <height>301</height>
     </rect>
+   </property>
+   <row>
+    <property name="text">
+     <string>1</string>
+    </property>
+   </row>
+   <column>
+    <property name="text">
+     <string>文件名</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>文件大小</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>最后修改时间</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>文件类型</string>
+    </property>
+   </column>
+   <item row="0" column="0">
+    <property name="text">
+     <string/>
+    </property>
+   </item>
+   <item row="0" column="1">
+    <property name="text">
+     <string/>
+    </property>
+   </item>
+   <item row="0" column="2">
+    <property name="text">
+     <string/>
+    </property>
+   </item>
+   <item row="0" column="3">
+    <property name="text">
+     <string/>
+    </property>
+   </item>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>20</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>上传文件</string>
    </property>
   </widget>
  </widget>
