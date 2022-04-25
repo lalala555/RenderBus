@@ -28,7 +28,11 @@ public:
 	void mousePressEvent(QMouseEvent *event);
 
 signals:
-	void checkStatusChange(bool);
+	void checkStatusChange(bool value);
+
+public slots:
+    void  checkstate(int row,int col);
+
 
 
 private:

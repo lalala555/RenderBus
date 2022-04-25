@@ -33,6 +33,7 @@ public:
     QPushButton *pushButton;
     QTableView *tableView;
     QTreeWidget *treeWidget;
+    QPushButton *pushButton_2;
 
     void setupUi(QWidget *QtWidgetsClass)
     {
@@ -72,6 +73,9 @@ public:
         treeWidget = new QTreeWidget(QtWidgetsClass);
         treeWidget->setObjectName(QStringLiteral("treeWidget"));
         treeWidget->setGeometry(QRect(110, 50, 161, 261));
+        pushButton_2 = new QPushButton(QtWidgetsClass);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pushButton_2->setGeometry(QRect(400, 20, 75, 23));
 
         retranslateUi(QtWidgetsClass);
 
@@ -93,6 +97,7 @@ public:
         pushButton->setText(QApplication::translate("QtWidgetsClass", "\344\270\212\344\274\240\346\226\207\344\273\266", Q_NULLPTR));
         QTreeWidgetItem *___qtreewidgetitem = treeWidget->headerItem();
         ___qtreewidgetitem->setText(0, QApplication::translate("QtWidgetsClass", "\346\240\271\347\233\256\345\275\225", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("QtWidgetsClass", "\344\270\213\350\275\275", Q_NULLPTR));
     } // retranslateUi
 
 };

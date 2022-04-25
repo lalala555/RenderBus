@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_QtWidgetsClass_t {
-    QByteArrayData data[25];
-    char stringdata0[352];
+    QByteArrayData data[31];
+    char stringdata0[426];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -56,7 +56,13 @@ QT_MOC_LITERAL(20, 295, 28), // "QAbstractSocket::SocketError"
 QT_MOC_LITERAL(21, 324, 5), // "error"
 QT_MOC_LITERAL(22, 330, 13), // "clickedchange"
 QT_MOC_LITERAL(23, 344, 3), // "row"
-QT_MOC_LITERAL(24, 348, 3) // "col"
+QT_MOC_LITERAL(24, 348, 3), // "col"
+QT_MOC_LITERAL(25, 352, 22), // "SetAlarmListCheckState"
+QT_MOC_LITERAL(26, 375, 7), // "ischeck"
+QT_MOC_LITERAL(27, 383, 14), // "on_itemClicked"
+QT_MOC_LITERAL(28, 398, 16), // "QTreeWidgetItem*"
+QT_MOC_LITERAL(29, 415, 4), // "item"
+QT_MOC_LITERAL(30, 420, 5) // "index"
 
     },
     "QtWidgetsClass\0on_pushButton_3_clicked\0"
@@ -68,7 +74,9 @@ QT_MOC_LITERAL(24, 348, 3) // "col"
     "onConnected\0onDisconnected\0onTextReceived\0"
     "data\0onTextMessageReceived\0"
     "QAbstractSocket::SocketError\0error\0"
-    "clickedchange\0row\0col"
+    "clickedchange\0row\0col\0SetAlarmListCheckState\0"
+    "ischeck\0on_itemClicked\0QTreeWidgetItem*\0"
+    "item\0index"
 };
 #undef QT_MOC_LITERAL
 
@@ -78,7 +86,7 @@ static const uint qt_meta_data_QtWidgetsClass[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      15,   14, // methods
+      17,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -86,21 +94,23 @@ static const uint qt_meta_data_QtWidgetsClass[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   89,    2, 0x0a /* Public */,
-       3,    0,   90,    2, 0x0a /* Public */,
-       4,    1,   91,    2, 0x0a /* Public */,
-       7,    0,   94,    2, 0x0a /* Public */,
-       8,    0,   95,    2, 0x0a /* Public */,
-       9,    0,   96,    2, 0x0a /* Public */,
-      10,    0,   97,    2, 0x0a /* Public */,
-      11,    1,   98,    2, 0x0a /* Public */,
-      13,    1,  101,    2, 0x0a /* Public */,
-      15,    0,  104,    2, 0x0a /* Public */,
-      16,    0,  105,    2, 0x0a /* Public */,
-      17,    1,  106,    2, 0x0a /* Public */,
-      19,    1,  109,    2, 0x0a /* Public */,
-      11,    1,  112,    2, 0x0a /* Public */,
-      22,    2,  115,    2, 0x0a /* Public */,
+       1,    0,   99,    2, 0x0a /* Public */,
+       3,    0,  100,    2, 0x0a /* Public */,
+       4,    1,  101,    2, 0x0a /* Public */,
+       7,    0,  104,    2, 0x0a /* Public */,
+       8,    0,  105,    2, 0x0a /* Public */,
+       9,    0,  106,    2, 0x0a /* Public */,
+      10,    0,  107,    2, 0x0a /* Public */,
+      11,    1,  108,    2, 0x0a /* Public */,
+      13,    1,  111,    2, 0x0a /* Public */,
+      15,    0,  114,    2, 0x0a /* Public */,
+      16,    0,  115,    2, 0x0a /* Public */,
+      17,    1,  116,    2, 0x0a /* Public */,
+      19,    1,  119,    2, 0x0a /* Public */,
+      11,    1,  122,    2, 0x0a /* Public */,
+      22,    2,  125,    2, 0x0a /* Public */,
+      25,    1,  130,    2, 0x0a /* Public */,
+      27,    2,  133,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -118,6 +128,8 @@ static const uint qt_meta_data_QtWidgetsClass[] = {
     QMetaType::Void, QMetaType::QString,   18,
     QMetaType::Void, 0x80000000 | 20,   21,
     QMetaType::Void, QMetaType::Int, QMetaType::Int,   23,   24,
+    QMetaType::Void, QMetaType::Bool,   26,
+    QMetaType::Void, 0x80000000 | 28, QMetaType::Int,   29,   30,
 
        0        // eod
 };
@@ -143,6 +155,8 @@ void QtWidgetsClass::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 12: _t->onTextMessageReceived((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 13: _t->slotError((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
         case 14: _t->clickedchange((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 15: _t->SetAlarmListCheckState((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 16: _t->on_itemClicked((*reinterpret_cast< QTreeWidgetItem*(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -205,13 +219,13 @@ int QtWidgetsClass::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 15)
+        if (_id < 17)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 15;
+        _id -= 17;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 15)
+        if (_id < 17)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 15;
+        _id -= 17;
     }
     return _id;
 }

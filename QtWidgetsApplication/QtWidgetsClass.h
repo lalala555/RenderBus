@@ -17,6 +17,11 @@ typedef struct FileData
 	QString lastModify; //最后修改时间
 	QString fileType;    //文件类型
 };
+enum function
+{
+	upload,
+    download
+};
 class QtWidgetsClass : public QWidget
 {
 	Q_OBJECT
@@ -40,6 +45,8 @@ public:
 	void connectToServer();
 
 	void removeItem(QTreeWidgetItem * item);
+	//通过路径下载文件
+	void downLoadByPath(QList<QString> filepath);
 public slots:
     //登录
     
@@ -48,7 +55,7 @@ public slots:
 	void on_pushButton_clicked();
 
 	void on_finished(QNetworkReply *reply);
-	 
+	 //下载
 	void on_pushButton_2_clicked();
 
 	//解析json
@@ -75,7 +82,7 @@ public slots:
 	//tablewidget部分
 	void clickedchange(int row, int col);
 
-	void SetAlarmListCheckState();
+	void SetAlarmListCheckState(bool ischeck);
 
 	//treewidget部分
 	void on_itemClicked(QTreeWidgetItem * item, int index);
@@ -102,4 +109,6 @@ private:
 	QTreeWidgetItem * m_item; //跟节点
 	QTreeWidgetItem * m_currentitem; //当前节点
 	QString m_treepath = "";//点击tablewidget的path
+	QCheckBox * m_checkbox;
+	int function;
 };

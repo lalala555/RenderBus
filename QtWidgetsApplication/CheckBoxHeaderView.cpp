@@ -7,7 +7,9 @@ CheckBoxHeaderView::CheckBoxHeaderView(int checkColumnIndex, QPoint topLeft, QSi
 	m_topLeft = topLeft;
 	m_checkSize = size;
 	m_isChecked = false;
-
+	/*connect(checkBox, &QCheckBox::clicked, [this]() {
+		emit checkStateChange(checkBox->checkState());
+	});*/
 }
 
 CheckBoxHeaderView::~CheckBoxHeaderView()
@@ -66,11 +68,27 @@ void CheckBoxHeaderView::paintSection(QPainter *painter, const QRect &rect, int 
 
 void CheckBoxHeaderView::mousePressEvent(QMouseEvent *event)
 {
+	/*if (m_isChecked) {
+		m_isChecked = false;
+	}
+	else {
+		m_isChecked = true;
+	}
+	emit checkStatusChange(m_isChecked);
+	this->viewport()->update();
+	QHeaderView::mousePressEvent(event);*/
 	if (visualIndexAt(event->pos().x()) == m_checkColIndex)
 	{
 		m_isChecked = !m_isChecked;
 		this->updateSection(m_checkColIndex);
 		emit checkStatusChange(m_isChecked);
 	}
+
 	QHeaderView::mousePressEvent(event);
+}
+
+void CheckBoxHeaderView::checkstate(int row,int col)
+{
+	qDebug() << row << col;
+	//option.state = QStyle::State_Selected;
 }
