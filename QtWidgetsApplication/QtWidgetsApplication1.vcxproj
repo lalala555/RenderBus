@@ -94,6 +94,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CheckBoxHeaderView.cpp" />
     <ClCompile Include="QtHttpWidgets.cpp" />
     <ClCompile Include="QtTipsDialog.cpp" />
     <ClCompile Include="QtWidgetsClass.cpp" />
@@ -110,6 +111,7 @@
     <QtMoc Include="QtWidgetsClass.h" />
     <QtMoc Include="QtHttpWidgets.h" />
     <QtMoc Include="QtTipsDialog.h" />
+    <QtMoc Include="CheckBoxHeaderView.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,9 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QTableView>
 #include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -29,12 +31,14 @@ public:
     QPushButton *pushButton_3;
     QTableWidget *tableWidget;
     QPushButton *pushButton;
+    QTableView *tableView;
+    QTreeWidget *treeWidget;
 
     void setupUi(QWidget *QtWidgetsClass)
     {
         if (QtWidgetsClass->objectName().isEmpty())
             QtWidgetsClass->setObjectName(QStringLiteral("QtWidgetsClass"));
-        QtWidgetsClass->resize(733, 361);
+        QtWidgetsClass->resize(831, 652);
         lineEdit_user = new QLineEdit(QtWidgetsClass);
         lineEdit_user->setObjectName(QStringLiteral("lineEdit_user"));
         lineEdit_user->setGeometry(QRect(10, 20, 81, 31));
@@ -57,21 +61,17 @@ public:
         tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem3);
         QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem4);
-        if (tableWidget->rowCount() < 1)
-            tableWidget->setRowCount(1);
-        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        tableWidget->setVerticalHeaderItem(0, __qtablewidgetitem5);
-        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
-        tableWidget->setItem(0, 2, __qtablewidgetitem6);
-        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
-        tableWidget->setItem(0, 3, __qtablewidgetitem7);
-        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
-        tableWidget->setItem(0, 4, __qtablewidgetitem8);
         tableWidget->setObjectName(QStringLiteral("tableWidget"));
-        tableWidget->setGeometry(QRect(120, 50, 461, 301));
+        tableWidget->setGeometry(QRect(300, 50, 501, 271));
         pushButton = new QPushButton(QtWidgetsClass);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(120, 20, 75, 23));
+        pushButton->setGeometry(QRect(300, 20, 75, 23));
+        tableView = new QTableView(QtWidgetsClass);
+        tableView->setObjectName(QStringLiteral("tableView"));
+        tableView->setGeometry(QRect(130, 380, 441, 221));
+        treeWidget = new QTreeWidget(QtWidgetsClass);
+        treeWidget->setObjectName(QStringLiteral("treeWidget"));
+        treeWidget->setGeometry(QRect(110, 50, 161, 261));
 
         retranslateUi(QtWidgetsClass);
 
@@ -87,17 +87,12 @@ public:
         QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(2);
         ___qtablewidgetitem1->setText(QApplication::translate("QtWidgetsClass", "\346\226\207\344\273\266\345\244\247\345\260\217", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(3);
-        ___qtablewidgetitem2->setText(QApplication::translate("QtWidgetsClass", "\346\234\200\345\220\216\344\277\256\346\224\271\346\227\266\351\227\264", Q_NULLPTR));
+        ___qtablewidgetitem2->setText(QApplication::translate("QtWidgetsClass", "\346\226\260\345\273\272\345\210\227", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(4);
         ___qtablewidgetitem3->setText(QApplication::translate("QtWidgetsClass", "\346\226\207\344\273\266\347\261\273\345\236\213", Q_NULLPTR));
-        QTableWidgetItem *___qtablewidgetitem4 = tableWidget->verticalHeaderItem(0);
-        ___qtablewidgetitem4->setText(QApplication::translate("QtWidgetsClass", "1", Q_NULLPTR));
-
-        const bool __sortingEnabled = tableWidget->isSortingEnabled();
-        tableWidget->setSortingEnabled(false);
-        tableWidget->setSortingEnabled(__sortingEnabled);
-
         pushButton->setText(QApplication::translate("QtWidgetsClass", "\344\270\212\344\274\240\346\226\207\344\273\266", Q_NULLPTR));
+        QTreeWidgetItem *___qtreewidgetitem = treeWidget->headerItem();
+        ___qtreewidgetitem->setText(0, QApplication::translate("QtWidgetsClass", "\346\240\271\347\233\256\345\275\225", Q_NULLPTR));
     } // retranslateUi
 
 };
