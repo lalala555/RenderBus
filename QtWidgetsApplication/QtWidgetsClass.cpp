@@ -25,6 +25,7 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent)	: QWidget(parent)
 	m_Manager = new QNetworkAccessManager;
 	m_websocket = new QWebSocket;
 	m_userkey = "";
+	ui.pushButton_2->setEnabled(false);
 
 	//初始化树
 	m_item = new QTreeWidgetItem;
@@ -53,14 +54,26 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent)	: QWidget(parent)
 	connect(ui.tableWidget, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(clickedchange(int, int)));
 
 	//treewidget连接
+	connect(ui.treeWidget, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(on_itemClicked(QTreeWidgetItem *, int)));
+
+	//表头加入复选框
 	m_checkheaderview = new CheckBoxHeaderView(0, QPoint(26, 13), QSize(20, 20), Qt::Horizontal, this);
 	m_checkheaderview->setObjectName(QStringLiteral("m_checkHeaderView"));
 	m_checkheaderview->setStretchLastSection(true);
-	connect(m_checkheaderview, SIGNAL(checkStatusChange(bool)), this, SLOT(SetAlarmListCheckState(bool)));
-	connect(m_checkheaderview, &CheckBoxHeaderView::checkStatusChange, this, &QtWidgetsClass::SetAlarmListCheckState);
+	connect(m_checkheaderview, SIGNAL(checkStatusChange(bool)), this, SLOT(setAlarmListCheckState(bool)));
+	connect(m_checkheaderview, &CheckBoxHeaderView::checkStatusChange, this, &QtWidgetsClass::setAlarmListCheckState);
 	
 	connect(ui.tableWidget, SIGNAL(cellClicked(int, int)), m_checkheaderview, SLOT(checkstate(int, int)));
+
+	//增加信号 ，当未选择复选框时下载按钮置灰
+	connect(ui.tableWidget, SIGNAL(cellClicked(int, int)), this, SLOT(on_activebutton(int, int)));
+
+
 	connect(m_checkbox, SIGNAL(stateChanged(int)), m_checkheaderview, SLOT(checkstate(int)));
+
+	//设置tablewidget不可编辑
+	ui.tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	
 
 	m_Reply = Q_NULLPTR;
 	Init();
@@ -213,20 +226,9 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 	m_checkheaderview->setStyleSheet("alignment: left;");
 	ui.tableWidget->setHorizontalHeader(m_checkheaderview);
 	ui.tableWidget->horizontalHeader()->setVisible(true);
-	
-	
-
-
 	ui.tableWidget->setRowCount(datalist.size());
 	ui.tableWidget->setColumnCount(5);
-	/*QList<QString> collist;
-	collist.append("");
-	collist.append("filename");
-	collist.append("filesize");
-	collist.append("updatedate");
-	collist.append("filetype");
-
-	ui.tableWidget->setHorizontalHeaderLabels(collist);*/
+	
 //	QTableWidgetItem *item = new QTableWidgetItem(QString(""));
 	//ui.tableWidget->item(row, col)->setCheckState(Qt::Unchecked);
 //	ui.tableWidget->setItem(0, 0, new QTableWidgetItem(""));
@@ -243,7 +245,6 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 		//hLayout->setMargin(1); //设置边缘距离
 		//hLayout->setAlignment(m_checkbox, Qt::AlignCenter); //居中
 		//pWidget->setLayout(hLayout);
-	
 		QString fileName = datalist.at(i).fileName;
 		QString fileSize = datalist.at(i).fileSize;
 		QString lastModify = datalist.at(i).lastModify;
@@ -252,9 +253,7 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 		ui.tableWidget->setItem(i, 1,  new QTableWidgetItem(fileName));
 		ui.tableWidget->setItem(i, 2, new QTableWidgetItem(fileSize));
 		ui.tableWidget->setItem(i, 3, new QTableWidgetItem(lastModify));
-		ui.tableWidget->setItem(i, 4, new QTableWidgetItem(fileType));
-		
-		
+		ui.tableWidget->setItem(i, 4, new QTableWidgetItem(fileType));	
 		ui.tableWidget->item(i, 0)->setCheckState(Qt::Unchecked);
 		//ui.tableWidget->setCellWidget(i, 0, pWidget);
 
@@ -268,7 +267,6 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 void QtWidgetsClass::connectToServer()
 {
 	QString path = "wss://local.raysync.cn:9527/"; 
-	//QString path = "wss://127.0.0.1:2121";
 	QUrl url = QUrl(path);
 	m_websocket->open(url);
 }
@@ -302,13 +300,9 @@ void QtWidgetsClass::downLoadByPath(QList<QString> filepath)
 	QByteArray data5;
 	//QJsonArray array;
 //	array.append("0");
-     
-	
-	
-
 	QJsonDocument doc4;
 	QJsonObject jsonData2;
-	
+	QJsonArray array1;
 	for (int i = 0; i < filepath.size(); i++)
 	{
 		QString path = filepath.at(i);
@@ -328,9 +322,10 @@ void QtWidgetsClass::downLoadByPath(QList<QString> filepath)
 
 		QString dex = QString("%1").arg(i);
 		jsonData2.insert(dex, right);
+		array1.append(right);
 	}
-	QJsonArray array1;
-	array1.append(right);
+	
+	
 	QJsonObject jsonData3;
 	jsonData3.insert("names", array1);
 	QString leftpath = QString("/input/100000849/%1").arg(left);
@@ -347,17 +342,33 @@ void QtWidgetsClass::downLoadByPath(QList<QString> filepath)
 	m_websocket->sendBinaryMessage(data4);
 }
 
+QList<QString> QtWidgetsClass::getCheckedData(QString &filename)
+{
+	QList<QString> valuelist;
+	QString name;
+	for (int i = 0; i < ui.tableWidget->rowCount(); i++)
+	{
+		bool aa = ui.tableWidget->item(i, 0)->checkState(); //->setCheckState(Qt::Unchecked);
+		if (aa)
+		{
+			name = ui.tableWidget->item(i, 1)->text();
+			filename = name;
+			valuelist.append(name);
+		}
+	}
+	return valuelist;
+}
+
 void QtWidgetsClass::on_pushButton_3_clicked()
 {
 	QUrl u = QUrl("https://task.renderbus.com/api/sso/sign/signIn");
 	postSignIn(u);
-
 }
 
 void QtWidgetsClass::on_pushButton_clicked()
 {
 	connectToServer();
-	function = 0;
+	m_function = 0;
 	/*QJsonDocument doc1;
 	QJsonObject jsonData1;
 	jsonData1.insert("action", "list");
@@ -422,7 +433,7 @@ void QtWidgetsClass::on_finished(QNetworkReply *reply)
 void QtWidgetsClass::on_pushButton_2_clicked()
 {
 	connectToServer();
-	function = 1;
+	m_function = 1;
 	//QList<QString> valuelist;
 	//QList<QString> filepath;
 	//QString treepath = "";
@@ -506,36 +517,6 @@ void QtWidgetsClass::readyRead()
 		QUrl u = QUrl("https://task.renderbus.com/api/rendering/user/userLogin");
 		userLogin(u, rsauthtoken);
 	}
-	////获得响应的结果
-	//QByteArray replyData = m_Reply->readAll();
-	//QJsonParseError json_error;
-	//QJsonDocument jsonDoc(QJsonDocument::fromJson(replyData, &json_error));
-	//if (json_error.error != QJsonParseError::NoError)
-	//{
-	//	return;
-	//}
-	//QJsonObject rootObj = jsonDoc.object();
-	//QStringList list = rootObj.keys();
-	////循环json格式
-	//foreach(QString key, list)
-	//{
-	//	if (rootObj[key].isString())
-	//	{
-	//		qDebug() << "key:" << key << "value:" << rootObj[key].toString();
-	//	}
-	//	else if (rootObj[key].isArray() || key == "data")
-	//	{
-	//		//QJsonArray arr = rootObj[key].toString();
-
-	//		QJsonObject arrObj = rootObj.value("data").toObject();
-	//		QStringList list = arrObj.keys();
-	//		for (int i = 0; i < list.size(); i++)
-	//		{
-	//			qDebug() << "key:" << list.at(i) << "value:" << arrObj.value(list.at(i)).toString();
-	//		}
-	//	}
-
-	//}
 }
 
 void QtWidgetsClass::readyReadTwo()
@@ -607,10 +588,6 @@ void QtWidgetsClass::readyReadThree()
 		}
 		m_alldata = datalist;
 		showTable(datalist);
-		////获得userkey
-		//QString userkey = arrObj.value("userkey").toString();
-		//QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
-		//getUserDirFile(u, userkey);
 	}
 
 }
@@ -633,7 +610,8 @@ void QtWidgetsClass::clickedchange(int row, int col)
 	QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
 	QString currentvalue = ui.tableWidget->item(row, col)->text();
 	
-
+	if (col != 1)
+		return;
 	//创建按钮
 	QStringList list;
 	list << currentvalue;
@@ -652,13 +630,11 @@ void QtWidgetsClass::clickedchange(int row, int col)
 	}
 	m_currentitem = childitem;
 	ui.treeWidget->expandAll();
-	
 
-	
 	getUserDirFile(u, m_userkey,m_treepath);
 }
 
-void QtWidgetsClass::SetAlarmListCheckState(bool ischeck)
+void QtWidgetsClass::setAlarmListCheckState(bool ischeck)
 {
 	if (ischeck)
 	{
@@ -667,6 +643,7 @@ void QtWidgetsClass::SetAlarmListCheckState(bool ischeck)
 			
 			ui.tableWidget->item(i, 0)->setCheckState(Qt::Checked);
 		}
+		ui.pushButton_2->setEnabled(true);
 	}
 	else
 	{
@@ -674,7 +651,19 @@ void QtWidgetsClass::SetAlarmListCheckState(bool ischeck)
 		{
 			ui.tableWidget->item(i, 0)->setCheckState(Qt::Unchecked);
 		}
+		ui.pushButton_2->setEnabled(false);
 	}
+}
+
+void QtWidgetsClass::on_activebutton(int row, int col)
+{
+	QList<QString> filelist;
+	QString filename;
+	filelist = getCheckedData(filename);
+	if(filelist.size() > 0)
+		ui.pushButton_2->setEnabled(true);
+	else
+		ui.pushButton_2->setEnabled(false);
 }
 
 void QtWidgetsClass::on_itemClicked(QTreeWidgetItem * item, int index)
@@ -708,6 +697,7 @@ void QtWidgetsClass::on_itemClicked(QTreeWidgetItem * item, int index)
 	getUserDirFile(u, m_userkey, name);
 
 }
+
 
 void QtWidgetsClass::slotSslErrors( const QList<QSslError> &errs)
 {
@@ -759,7 +749,7 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 	QString codeStr = rootObj.value("id").toString();
 
 	QString path = rootObj.value("path").toString();
-	if (function == 0)
+	if (m_function == 0)
 	{
 		QJsonDocument doc1;
 		QJsonObject jsonData1;
@@ -779,7 +769,7 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 		QByteArray newdata2;
 		newdata2 = doc2.toJson(QJsonDocument::Compact);
 
-		function = 3;
+		m_function = 3;
 		m_websocket->sendBinaryMessage(newdata1);
 		m_websocket->sendBinaryMessage(newdata2);
 		
@@ -790,32 +780,15 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 		QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
 		getUserDirFile(u, m_userkey);
 	}
-	if (function == 1)
+	if (m_function == 1)
 	{
 		QList<QString> valuelist;
 		QList<QString> filepath;
 		QString treepath = "";
 		QString filename = "";
-		for (int i = 0; i < ui.tableWidget->rowCount(); i++)
-		{
-			bool aa = ui.tableWidget->item(i, 0)->checkState(); //->setCheckState(Qt::Unchecked);
-			if (aa)
-			{
-
-				filename = ui.tableWidget->item(i, 1)->text();
-				valuelist.append(filename);
-			}
-
-			qDebug() << aa;
-		}
-		//如果没有选择文件
-		if (valuelist.size() == 0)
-		{
-			QMessageBox::warning(this, QStringLiteral("Error!"), QStringLiteral("Please select file"), QMessageBox::Ok);
-			return;
-		}
+		valuelist = getCheckedData(filename);
 		//选择了一个文件
-		else if (valuelist.size() == 1) {
+	 if (valuelist.size() == 1) {
 			//判断是否有成员变量路径
 			if (m_treepath == NULL)
 			{
@@ -833,24 +806,24 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 			if (m_treepath == "/")
 			{
 				//说明此时在根目录
-				for (int i = 0; i < filepath.size(); i++)
+				for (int i = 0; i < valuelist.size(); i++)
 				{
-					treepath = QString("%1").arg(filepath.at(i));
+					treepath = QString("%1").arg(valuelist.at(i));
 					filepath.append(treepath);
 				}
 
 			}
 			else {
 				//按实际选择的路径
-				for (int i = 0; i < filepath.size(); i++)
+				for (int i = 0; i < valuelist.size(); i++)
 				{
-					treepath = QString("%1/%2").arg(m_treepath).append(filepath.at(i));
+					treepath = QString("%1/%2").arg(m_treepath).arg(valuelist.at(i));
 					treepath.remove(0, 1);
 					filepath.append(treepath);
 				}
 			}
 		}
-		function = 3;
+		m_function = 3;
 		downLoadByPath(filepath);
 		
 	}

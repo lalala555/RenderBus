@@ -13,10 +13,11 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QTableView>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QWidget>
@@ -26,28 +27,26 @@ QT_BEGIN_NAMESPACE
 class Ui_QtWidgetsClass
 {
 public:
+    QTableWidget *tableWidget;
+    QTreeWidget *treeWidget;
+    QWidget *layoutWidget;
+    QHBoxLayout *horizontalLayout;
     QLineEdit *lineEdit_user;
     QLineEdit *lineEdit_2;
     QPushButton *pushButton_3;
-    QTableWidget *tableWidget;
+    QSpacerItem *horizontalSpacer;
+    QWidget *layoutWidget1;
+    QHBoxLayout *horizontalLayout_2;
+    QSpacerItem *horizontalSpacer_2;
     QPushButton *pushButton;
-    QTableView *tableView;
-    QTreeWidget *treeWidget;
+    QPushButton *pushButton_2;
+    QSpacerItem *horizontalSpacer_3;
 
     void setupUi(QWidget *QtWidgetsClass)
     {
         if (QtWidgetsClass->objectName().isEmpty())
             QtWidgetsClass->setObjectName(QStringLiteral("QtWidgetsClass"));
-        QtWidgetsClass->resize(831, 652);
-        lineEdit_user = new QLineEdit(QtWidgetsClass);
-        lineEdit_user->setObjectName(QStringLiteral("lineEdit_user"));
-        lineEdit_user->setGeometry(QRect(10, 20, 81, 31));
-        lineEdit_2 = new QLineEdit(QtWidgetsClass);
-        lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
-        lineEdit_2->setGeometry(QRect(10, 60, 81, 31));
-        pushButton_3 = new QPushButton(QtWidgetsClass);
-        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
-        pushButton_3->setGeometry(QRect(20, 110, 61, 23));
+        QtWidgetsClass->resize(745, 433);
         tableWidget = new QTableWidget(QtWidgetsClass);
         if (tableWidget->columnCount() < 5)
             tableWidget->setColumnCount(5);
@@ -62,16 +61,66 @@ public:
         QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem4);
         tableWidget->setObjectName(QStringLiteral("tableWidget"));
-        tableWidget->setGeometry(QRect(300, 50, 501, 271));
-        pushButton = new QPushButton(QtWidgetsClass);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(300, 20, 75, 23));
-        tableView = new QTableView(QtWidgetsClass);
-        tableView->setObjectName(QStringLiteral("tableView"));
-        tableView->setGeometry(QRect(130, 380, 441, 221));
+        tableWidget->setGeometry(QRect(200, 100, 511, 291));
         treeWidget = new QTreeWidget(QtWidgetsClass);
+        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
+        __qtreewidgetitem->setText(0, QStringLiteral("1"));
+        treeWidget->setHeaderItem(__qtreewidgetitem);
         treeWidget->setObjectName(QStringLiteral("treeWidget"));
-        treeWidget->setGeometry(QRect(110, 50, 161, 261));
+        treeWidget->setGeometry(QRect(10, 100, 161, 291));
+        layoutWidget = new QWidget(QtWidgetsClass);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(9, 30, 311, 25));
+        horizontalLayout = new QHBoxLayout(layoutWidget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        lineEdit_user = new QLineEdit(layoutWidget);
+        lineEdit_user->setObjectName(QStringLiteral("lineEdit_user"));
+
+        horizontalLayout->addWidget(lineEdit_user);
+
+        lineEdit_2 = new QLineEdit(layoutWidget);
+        lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
+
+        horizontalLayout->addWidget(lineEdit_2);
+
+        pushButton_3 = new QPushButton(layoutWidget);
+        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
+
+        horizontalLayout->addWidget(pushButton_3);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer);
+
+        layoutWidget1 = new QWidget(QtWidgetsClass);
+        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
+        layoutWidget1->setGeometry(QRect(9, 70, 621, 25));
+        horizontalLayout_2 = new QHBoxLayout(layoutWidget1);
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        horizontalSpacer_2 = new QSpacerItem(118, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_2);
+
+        pushButton = new QPushButton(layoutWidget1);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+
+        horizontalLayout_2->addWidget(pushButton);
+
+        pushButton_2 = new QPushButton(layoutWidget1);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+
+        horizontalLayout_2->addWidget(pushButton_2);
+
+        horizontalSpacer_3 = new QSpacerItem(238, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_3);
+
 
         retranslateUi(QtWidgetsClass);
 
@@ -81,7 +130,6 @@ public:
     void retranslateUi(QWidget *QtWidgetsClass)
     {
         QtWidgetsClass->setWindowTitle(QApplication::translate("QtWidgetsClass", "QtWidgetsClass", Q_NULLPTR));
-        pushButton_3->setText(QApplication::translate("QtWidgetsClass", "\347\231\273\345\275\225", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(1);
         ___qtablewidgetitem->setText(QApplication::translate("QtWidgetsClass", "\346\226\207\344\273\266\345\220\215", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(2);
@@ -90,9 +138,9 @@ public:
         ___qtablewidgetitem2->setText(QApplication::translate("QtWidgetsClass", "\346\226\260\345\273\272\345\210\227", Q_NULLPTR));
         QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(4);
         ___qtablewidgetitem3->setText(QApplication::translate("QtWidgetsClass", "\346\226\207\344\273\266\347\261\273\345\236\213", Q_NULLPTR));
+        pushButton_3->setText(QApplication::translate("QtWidgetsClass", "\347\231\273\345\275\225", Q_NULLPTR));
         pushButton->setText(QApplication::translate("QtWidgetsClass", "\344\270\212\344\274\240\346\226\207\344\273\266", Q_NULLPTR));
-        QTreeWidgetItem *___qtreewidgetitem = treeWidget->headerItem();
-        ___qtreewidgetitem->setText(0, QApplication::translate("QtWidgetsClass", "\346\240\271\347\233\256\345\275\225", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("QtWidgetsClass", "\344\270\213\350\275\275", Q_NULLPTR));
     } // retranslateUi
 
 };
