@@ -56,6 +56,12 @@ public:
 
 	//判断复选框有多少个被勾选,返回被勾选的文件名,并记录最后一次选中的文件名
 	QList<QString> getCheckedData(QString &filename);
+
+	//通过右键下载文件
+	void downLoadByRight(QString &filename);
+
+	//读取svg到tablewidget
+	void loadSvg(int i,QString& fileName);
 public slots:
     //登录 
     void on_pushButton_3_clicked();
@@ -106,9 +112,15 @@ public slots:
 	//绑定checkbox的信号，从而判断是否激活/置灰下载按钮
 	void on_activebutton(int row, int col);
 
+	void on_rightclicked();
+
 	//treewidget部分
 	//绑定treewidget的信号，根据treewidget选择的节点组装相应的路径，根据路径，userkey获得相应的文件列表并在tablewidget展示
 	void on_itemClicked(QTreeWidgetItem * item, int index);
+
+	void tableContextMenuRequested(QPoint t);
+
+
 
 
 
@@ -125,6 +137,7 @@ private:
 	QString m_username;
 	QString m_password;
 	QString m_raySyncUserKey;
+	int m_userid;
 	QString m_userkey;
 	CheckBoxHeaderView *m_checkheaderview;
 	
@@ -134,4 +147,7 @@ private:
 	QString m_treepath = "";//点击tablewidget的path
 	QCheckBox * m_checkbox;
 	int m_function;//功能
+	QAction *m_action; //右键插入动作
+	QMenu* m_Menu;
+	QString m_filename;//右键时选择的文件名
 };

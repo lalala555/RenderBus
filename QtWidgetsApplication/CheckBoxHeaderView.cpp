@@ -23,31 +23,6 @@ void CheckBoxHeaderView::setCheckState(bool state)
 
 void CheckBoxHeaderView::paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const
 {
-	/*painter->save();
-	QHeaderView::paintSection(painter, rect, logicalIndex);
-	painter->restore();
-	if (logicalIndex == m_checkColIndex)
-	{
-		QStyleOptionButton option;
-		int width = 10;
-		for (int i = 0; i < logicalIndex; ++i)
-		{
-			width += sectionSize(i);
-		}
-		option.rect = QRect(m_topLeft.x(), m_topLeft.y(), m_checkSize.width(), m_checkSize.height());
-		if (m_isChecked)
-		{
-			option.state = QStyle::State_On;
-		}
-		else
-		{
-			option.state = QStyle::State_Off;
-		}
-		QCheckBox *check = new QCheckBox;
-		QString sheet = QString("QCheckBox::indicator {width: %1px;  height: %2px;}").arg(m_checkSize.width()).arg(m_checkSize.height());
-		check->setStyleSheet(sheet);
-		this->style()->drawControl(QStyle::CE_CheckBox, &option, painter, check);
-	}*/
 	painter->save();
 	QHeaderView::paintSection(painter, rect, logicalIndex);
 	painter->restore();

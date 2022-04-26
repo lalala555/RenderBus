@@ -13,6 +13,9 @@
 #include <QHBoxLayout>
 #include <QStyleFactory>
 #include <QMessageBox>
+#include <QMenu>
+#include <QAction>
+#include <QtSvg/QSvgRenderer>
 
 QtWidgetsClass::QtWidgetsClass(QWidget *parent)	: QWidget(parent)
 {
@@ -27,15 +30,14 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent)	: QWidget(parent)
 	m_userkey = "";
 	ui.pushButton_2->setEnabled(false);
 
+	//创建连接
+	//connect(m_action, SIGNAL(triggered()), this, SLOT(on_rightclicked()));
+
 	//初始化树
 	m_item = new QTreeWidgetItem;
-	m_item->setText(0, "genmulu");
+	m_item->setText(0, "/");
 	ui.treeWidget->addTopLevelItem(m_item);
 	m_checkbox = new QCheckBox();
-	//m_serversocket = new QWebSocketServer("server", QWebSocketServer::NonSecureMode);
-	//m_serversocket->listen(QHostAddress::Any, 2121);
-	//connect(m_serversocket, SIGNAL(newConnection()), this, SLOT(slotNewConnect()));
-
 	connect(m_Manager, SIGNAL(finished(QNetworkReply *reply)), this, SLOT(on_finished(QNetworkReply *reply)));
 
 	connect(m_websocket, SIGNAL(disconnected()), this, SLOT(onDisconnected()), Qt::AutoConnection);
@@ -115,17 +117,6 @@ void QtWidgetsClass::postSignIn(QUrl &u)
 	QString finalword = finalpass;
 
 	m_password = finalword;
-
-	/*QUrlQuery query;
-	query.addQueryItem("loginName", username);
-	query.addQueryItem("password", finalpass);
-	url.setQuery(query);
-	QString aa = url.toString();*/
-	qDebug() << url;
-
-	//m_Request->setRawHeader("userkey", "rsat:L4lkPYwkpJLAhIxHGhxm1Tnaq4g");
-	//m_Request->setRawHeader("languageflag", "0");
-	//m_Request->setRawHeader("platform", "2");
 	m_Request->setRawHeader("signature", "rayvision2017");
 	m_Request->setRawHeader("version", "1.0.0");
 	//m_Request->setRawHeader("channel", "2");
@@ -227,41 +218,39 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 	ui.tableWidget->setHorizontalHeader(m_checkheaderview);
 	ui.tableWidget->horizontalHeader()->setVisible(true);
 	ui.tableWidget->setRowCount(datalist.size());
-	ui.tableWidget->setColumnCount(5);
-	
-//	QTableWidgetItem *item = new QTableWidgetItem(QString(""));
-	//ui.tableWidget->item(row, col)->setCheckState(Qt::Unchecked);
-//	ui.tableWidget->setItem(0, 0, new QTableWidgetItem(""));
-	//ui.tableWidget->item(0, 0)->setCheckState(Qt::Unchecked);
+	ui.tableWidget->setColumnCount(6);
+
 	for (int i = 0; i < datalist.size(); i++)
 	{
-		//QWidget *pWidget = new QWidget();
-		//QHBoxLayout *hLayout = new QHBoxLayout();
-		//m_checkbox = new QCheckBox();
-		//m_checkbox->setCheckState(Qt::CheckState::Unchecked);
-		//m_checkbox->setStyle(QStyleFactory::create("fusion"));
-		//m_checkbox->setStyleSheet(QString("QCheckBox {margin:3px;border:0px;}QCheckBox::indicator {width: %1px; height: %1px; }").arg(20));
-		//hLayout->addWidget(m_checkbox);
-		//hLayout->setMargin(1); //设置边缘距离
-		//hLayout->setAlignment(m_checkbox, Qt::AlignCenter); //居中
-		//pWidget->setLayout(hLayout);
 		QString fileName = datalist.at(i).fileName;
 		QString fileSize = datalist.at(i).fileSize;
 		QString lastModify = datalist.at(i).lastModify;
 		QString fileType = datalist.at(i).fileType;
+		loadSvg(i,fileName);
 		ui.tableWidget->setItem(i, 0, new QTableWidgetItem(""));
-		ui.tableWidget->setItem(i, 1,  new QTableWidgetItem(fileName));
-		ui.tableWidget->setItem(i, 2, new QTableWidgetItem(fileSize));
-		ui.tableWidget->setItem(i, 3, new QTableWidgetItem(lastModify));
-		ui.tableWidget->setItem(i, 4, new QTableWidgetItem(fileType));	
+		ui.tableWidget->setItem(i, 2,  new QTableWidgetItem(fileName));
+		ui.tableWidget->setItem(i, 3, new QTableWidgetItem(fileSize));
+		ui.tableWidget->setItem(i, 4, new QTableWidgetItem(lastModify));
+		ui.tableWidget->setItem(i, 5, new QTableWidgetItem(fileType));	
 		ui.tableWidget->item(i, 0)->setCheckState(Qt::Unchecked);
 		//ui.tableWidget->setCellWidget(i, 0, pWidget);
 
 	}
-	
-	//ui.tableWidget->setCellWidget(1, 0, pWidget);
-	//ui.tableWidget->setHorizontalHeader(m_checkheaderview);
+	ui.tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(ui.tableWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(tableContextMenuRequested(QPoint)));
+	m_action = new QAction(this);
+	m_action->setText("download");
+	m_Menu = new QMenu(this);
+	m_Menu->addAction(m_action);
+	connect(m_action, SIGNAL(triggered()), this, SLOT(on_rightclicked()));
+
+
 	ui.tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+	QHeaderView* headerView = ui.tableWidget->verticalHeader();
+	headerView->setHidden(true);
+
+	//ui.tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
+
 }
 
 void QtWidgetsClass::connectToServer()
@@ -291,15 +280,13 @@ void QtWidgetsClass::downLoadByPath(QList<QString> filepath)
 {
 	QString left = "";
 	QString right = "";
-	
 
 	QByteArray data1;
 	QByteArray data2;
 	QByteArray data3;
 	QByteArray data4;
 	QByteArray data5;
-	//QJsonArray array;
-//	array.append("0");
+
 	QJsonDocument doc4;
 	QJsonObject jsonData2;
 	QJsonArray array1;
@@ -319,7 +306,6 @@ void QtWidgetsClass::downLoadByPath(QList<QString> filepath)
 			right = path;
 		}
 		
-
 		QString dex = QString("%1").arg(i);
 		jsonData2.insert(dex, right);
 		array1.append(right);
@@ -328,7 +314,7 @@ void QtWidgetsClass::downLoadByPath(QList<QString> filepath)
 	
 	QJsonObject jsonData3;
 	jsonData3.insert("names", array1);
-	QString leftpath = QString("/input/100000849/%1").arg(left);
+	QString leftpath = QString("/input/%1/%2").arg(m_userid).arg(left);
 	jsonData3.insert("path", leftpath);
 	jsonData3.insert("to", "");
 	QJsonArray array2;
@@ -351,12 +337,67 @@ QList<QString> QtWidgetsClass::getCheckedData(QString &filename)
 		bool aa = ui.tableWidget->item(i, 0)->checkState(); //->setCheckState(Qt::Unchecked);
 		if (aa)
 		{
-			name = ui.tableWidget->item(i, 1)->text();
+			name = ui.tableWidget->item(i, 2)->text();
 			filename = name;
 			valuelist.append(name);
 		}
 	}
 	return valuelist;
+}
+
+void QtWidgetsClass::downLoadByRight(QString &filename)
+{
+	QList<QString> valuelist;
+	QList<QString> filepath;
+	QString treepath = "";
+
+	if (m_treepath == NULL)
+	{
+		treepath = QString("%1").arg(filename);
+	}
+	else
+	{
+		treepath = QString("%1/%2").arg(m_treepath).arg(filename);
+		treepath.remove(0, 1);
+	}
+	filepath.append(treepath);
+	downLoadByPath(filepath);
+
+}
+
+void QtWidgetsClass::loadSvg(int i,QString& fileName)
+{
+	QString strpath = "";
+	if (!fileName.contains("."))
+	{
+	    strpath = "E://photo/btn-folder.svg";
+	}
+	else
+	{
+		int index = fileName.lastIndexOf(".");
+		QString right = fileName.right(fileName.size() - index - 1);
+		if (right == "zip")
+		{
+			strpath = "E://photo/pack.svg";
+		}
+		else
+		{
+			strpath = "E://photo/default.svg";
+		}
+	}
+   // QString strpath = "E://photo/default.svg";
+	QSvgRenderer* svgRender = new QSvgRenderer();
+    svgRender->load(strpath);
+    QPixmap* pixmap = new QPixmap(25, 25);
+    pixmap->fill(Qt::transparent);//设置背景透明
+    QPainter p(pixmap);
+    svgRender->render(&p);
+	QLabel* label = new QLabel;
+	label->setPixmap(*pixmap);
+    label->setAlignment(Qt::AlignHCenter);
+	label->show();
+
+	ui.tableWidget->setCellWidget(i, 1, label);
 }
 
 void QtWidgetsClass::on_pushButton_3_clicked()
@@ -369,37 +410,6 @@ void QtWidgetsClass::on_pushButton_clicked()
 {
 	connectToServer();
 	m_function = 0;
-	/*QJsonDocument doc1;
-	QJsonObject jsonData1;
-	jsonData1.insert("action", "list");
-	jsonData1.insert("path", "/input/100000849/");
-	doc1.setObject(jsonData1);
-	QByteArray newdata1;
-	newdata1 = doc1.toJson(QJsonDocument::Compact);
-
-	QJsonDocument doc2;
-	QJsonObject jsonData2;
-	jsonData2.insert("action", "upload");
-	jsonData2.insert("full_path", false);
-	jsonData2.insert("path", "/input/100000849/");
-	jsonData2.insert("type", 0);
-	doc2.setObject(jsonData2);
-	QByteArray newdata2;
-	newdata2 = doc2.toJson(QJsonDocument::Compact);
-
-	m_websocket->sendBinaryMessage(newdata1);
-	m_websocket->sendBinaryMessage(newdata2);
-*/
-	/*ui.tableWidget->clear();
-	QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
-	getUserDirFile(u, m_userkey);*/
-    //上传后刷新界面
-	//ui.tableWidget->clear();
-	//QUrl u = QUrl("https://task.renderbus.com/api/sso/sign/signIn");
-	//postSignIn(u);
-	//QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
-	//getUserDirFile(u, m_userkey);
-
 }
 
 void QtWidgetsClass::on_finished(QNetworkReply *reply)
@@ -434,65 +444,6 @@ void QtWidgetsClass::on_pushButton_2_clicked()
 {
 	connectToServer();
 	m_function = 1;
-	//QList<QString> valuelist;
-	//QList<QString> filepath;
-	//QString treepath = "";
-	//QString filename = "";
-	//for (int i = 0; i < ui.tableWidget->rowCount(); i++)
-	//{
-	//	bool aa = ui.tableWidget->item(i, 0)->checkState(); //->setCheckState(Qt::Unchecked);
-	//	if (aa)
-	//	{
-	//		
-	//		filename = ui.tableWidget->item(i, 1)->text();
-	//		valuelist.append(filename);
-	//	}
-	//		
-	//	qDebug() << aa;
-	//}
-	////如果没有选择文件
-	//if (valuelist.size() == 0)
-	//{
-	//	QMessageBox::warning(this, QStringLiteral("Error!"), QStringLiteral("Please select file"), QMessageBox::Ok);
-	//	return;
-	//}
-	////选择了一个文件
-	//else if (valuelist.size() == 1) {
-	//	//判断是否有成员变量路径
-	//	if (m_treepath == NULL)
-	//	{
-	//		treepath = QString("%1").arg(filename);
-	//	}
-	//	else
-	//	{
-	//		treepath = QString("%1/%2").arg(m_treepath).arg(filename);
-	//		treepath.remove(0, 1);
-	//	}
-	//	filepath.append(treepath);
-	//}
-	////选择了多个文件
-	//else {
-	//	if (m_treepath == "/")
-	//	{
-	//		//说明此时在根目录
-	//		for (int i = 0; i < filepath.size(); i++)
-	//		{
-	//			treepath = QString("%1").arg(filepath.at(i));
-	//			filepath.append(treepath);
-	//		}
-	//		
-	//	}
-	//	else {
-	//		//按实际选择的路径
-	//		for (int i = 0; i < filepath.size(); i++)
-	//		{
-	//			treepath = QString("%1/%2").arg(m_treepath).append(filepath.at(i));
-	//			treepath.remove(0,1);
-	//			filepath.append(treepath);
-	//		}
-	//	}
-	//}
-	//downLoadByPath(filepath);
 }
 
 void QtWidgetsClass::readyRead()
@@ -538,6 +489,7 @@ void QtWidgetsClass::readyReadTwo()
 		QJsonObject arrObj = rootObj.value("data").toObject();
 		//获得userkey
 		QString userkey = arrObj.value("userKey").toString();
+		m_userid = arrObj.value("id").toInt();
 		m_raySyncUserKey = arrObj.value("raySyncUserKey").toString();
 		m_userkey = userkey;
 		QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
@@ -606,12 +558,15 @@ void QtWidgetsClass::slotError(QAbstractSocket::SocketError error)
 void QtWidgetsClass::clickedchange(int row, int col)
 {
 	qDebug() << row << col;
+	//如果是文件，直接return
+	QString filetype = ui.tableWidget->item(row, 5)->text();
+	if (filetype != NULL || col != 2)
+		return;
 	
 	QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
 	QString currentvalue = ui.tableWidget->item(row, col)->text();
 	
-	if (col != 1)
-		return;
+	
 	//创建按钮
 	QStringList list;
 	list << currentvalue;
@@ -621,7 +576,7 @@ void QtWidgetsClass::clickedchange(int row, int col)
 	if (!m_item->child(0))
 	{
 		m_item->addChild(childitem);
-		m_treepath = QString("/%1").arg(currentvalue);
+		m_treepath = QString("%1").arg(currentvalue);
 	}
 	else
 	{
@@ -666,6 +621,13 @@ void QtWidgetsClass::on_activebutton(int row, int col)
 		ui.pushButton_2->setEnabled(false);
 }
 
+void QtWidgetsClass::on_rightclicked()
+{
+	m_filename = ui.tableWidget->currentItem()->text();
+	m_function = 5;
+	connectToServer();
+}
+
 void QtWidgetsClass::on_itemClicked(QTreeWidgetItem * item, int index)
 {
 	
@@ -679,7 +641,7 @@ void QtWidgetsClass::on_itemClicked(QTreeWidgetItem * item, int index)
 		{
 			item = item->parent();
 			QString text = item->text(index);
-			if (text != "genmulu")
+			if (text != "/")
 			{
 				name = QString("%1/%2").arg(text).arg(name);
 			}
@@ -698,6 +660,12 @@ void QtWidgetsClass::on_itemClicked(QTreeWidgetItem * item, int index)
 
 }
 
+
+void QtWidgetsClass::tableContextMenuRequested(QPoint t)
+{
+	m_Menu->exec(QCursor::pos()); 
+	
+}
 
 void QtWidgetsClass::slotSslErrors( const QList<QSslError> &errs)
 {
@@ -754,7 +722,10 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 		QJsonDocument doc1;
 		QJsonObject jsonData1;
 		jsonData1.insert("action", "list");
-		jsonData1.insert("path", "/input/100000849/");
+		QString newpath = QString("/input/%1/%2").arg(m_userid).arg(m_treepath);
+
+		//jsonData1.insert("path", "/input/100000849/");
+		jsonData1.insert("path", newpath);
 		doc1.setObject(jsonData1);
 		QByteArray newdata1;
 		newdata1 = doc1.toJson(QJsonDocument::Compact);
@@ -763,7 +734,7 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 		QJsonObject jsonData2;
 		jsonData2.insert("action", "upload");
 		jsonData2.insert("full_path", false);
-		jsonData2.insert("path", "/input/100000849/");
+		jsonData2.insert("path", newpath);
 		jsonData2.insert("type", 0);
 		doc2.setObject(jsonData2);
 		QByteArray newdata2;
@@ -772,13 +743,29 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 		m_function = 3;
 		m_websocket->sendBinaryMessage(newdata1);
 		m_websocket->sendBinaryMessage(newdata2);
+
+		//QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
+	//	if (m_treepath == "")
+		//	m_treepath = "/";
+		//getUserDirFile(u, m_userkey, m_treepath);
 		
 	}
-	if (path != NULL)
+	if (path != NULL && m_function == 3)
 	{
+		QString treepath = "";
+		m_function = 4;
 		ui.tableWidget->clear();
 		QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
-		getUserDirFile(u, m_userkey);
+		if (m_treepath == "")
+		{
+			treepath = "/";
+		}
+		else
+		{
+			treepath = QString("/%1").arg(m_treepath);
+		}
+				
+		getUserDirFile(u, m_userkey, treepath);
 	}
 	if (m_function == 1)
 	{
@@ -797,7 +784,7 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 			else
 			{
 				treepath = QString("%1/%2").arg(m_treepath).arg(filename);
-				treepath.remove(0, 1);
+				//treepath.remove(0, 1);
 			}
 			filepath.append(treepath);
 		}
@@ -818,7 +805,7 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 				for (int i = 0; i < valuelist.size(); i++)
 				{
 					treepath = QString("%1/%2").arg(m_treepath).arg(valuelist.at(i));
-					treepath.remove(0, 1);
+					//treepath.remove(0, 1);
 					filepath.append(treepath);
 				}
 			}
@@ -826,6 +813,11 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 		m_function = 3;
 		downLoadByPath(filepath);
 		
+	}
+	if (m_function == 5)
+	{
+		downLoadByRight(m_filename);
+		m_function = 3;
 	}
 }
 
