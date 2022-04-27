@@ -38,6 +38,8 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent)	: QWidget(parent)
 	m_item->setText(0, "/");
 	ui.treeWidget->addTopLevelItem(m_item);
 	m_checkbox = new QCheckBox();
+	ui.tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
+	
 	connect(m_Manager, SIGNAL(finished(QNetworkReply *reply)), this, SLOT(on_finished(QNetworkReply *reply)));
 
 	connect(m_websocket, SIGNAL(disconnected()), this, SLOT(onDisconnected()), Qt::AutoConnection);
@@ -65,7 +67,6 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent)	: QWidget(parent)
 	connect(m_checkheaderview, SIGNAL(checkStatusChange(bool)), this, SLOT(setAlarmListCheckState(bool)));
 	connect(m_checkheaderview, &CheckBoxHeaderView::checkStatusChange, this, &QtWidgetsClass::setAlarmListCheckState);
 
-	connect(m_checkheaderview, SIGNAL(refresh()), this, SLOT(on_refresh()));
 	
 	//connect(ui.tableWidget, SIGNAL(cellClicked(int, int)), m_checkheaderview, SLOT(checkstate(int, int)));
 
@@ -77,6 +78,7 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent)	: QWidget(parent)
 	//设置tablewidget不可编辑
 	ui.tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	
+	//改变表头状态
 	connect(this, SIGNAL(checkedboxchanged(int)), m_checkheaderview, SLOT(checkstate(int)));
 
 	m_Reply = Q_NULLPTR;
@@ -250,8 +252,8 @@ void QtWidgetsClass::showTable(QList<FileData>& datalist)
 
 
 	ui.tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-	QHeaderView* headerView = ui.tableWidget->verticalHeader();
-	headerView->setHidden(true);
+	//QHeaderView* headerView = ui.tableWidget->verticalHeader();
+	//headerView->setHidden(true);
 
 	//ui.tableWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
 
@@ -638,7 +640,13 @@ void QtWidgetsClass::on_activebutton(int row, int col)
 
 void QtWidgetsClass::on_rightclicked()
 {
-	m_filename = ui.tableWidget->currentItem()->text();
+	QTableWidgetItem * item = ui.tableWidget->currentItem();
+	if (!item)
+		return;
+	m_filename = item->text();
+	if (m_filename == NULL)
+		m_Menu->hide();
+
 	m_function = 5;
 	connectToServer();
 }

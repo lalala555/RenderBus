@@ -28,7 +28,7 @@ void CheckBoxHeaderView::setCheckState(bool state)
 
 void CheckBoxHeaderView::paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const
 {
-	/*painter->save();
+	painter->save();
 	QHeaderView::paintSection(painter, rect, logicalIndex);
 	painter->restore();
 
@@ -43,8 +43,8 @@ void CheckBoxHeaderView::paintSection(QPainter *painter, const QRect &rect, int 
 		else
 			option.state = QStyle::State_Off;
 		this->style()->drawPrimitive(QStyle::PE_IndicatorCheckBox, &option, painter);
-	}*/
-	painter->save();
+	}
+	/*painter->save();
 	QHeaderView::paintSection(painter, rect, logicalIndex);
 	painter->restore();
 	if (logicalIndex == 0)
@@ -68,11 +68,11 @@ void CheckBoxHeaderView::paintSection(QPainter *painter, const QRect &rect, int 
 		option.iconSize = QSize(20, 20);
 		option.rect = rect;
 		style()->drawPrimitive(QStyle::PE_IndicatorCheckBox, &option, painter,&checkBox);
-		qDebug() << "update";
+		qDebug() << "update";*/
 		
 		//style()->drawItemPixmap(painter, rect, Qt::AlignCenter, QPixmap(":/images/checkBoxChecked"));
 		//style()->drawControl(QStyle::CE_CheckBox, &option, painter, this);
-	}
+	//}
 }
 
 void CheckBoxHeaderView::mousePressEvent(QMouseEvent *event)
@@ -86,11 +86,6 @@ void CheckBoxHeaderView::mousePressEvent(QMouseEvent *event)
 	}
 
 	QHeaderView::mousePressEvent(event);
-}
-
-void CheckBoxHeaderView::fresh()
-{
-	update();
 }
 
 // 鼠标滑过、离开，更新复选框状态
@@ -112,22 +107,27 @@ bool CheckBoxHeaderView::event(QEvent *event)
 
 void CheckBoxHeaderView::checkstate(int value)
 {
-	if (value == Qt::PartiallyChecked) {
-		m_bTristate = true;
-		m_bNoChange = true;
-	}
-	else {
-		m_bNoChange = false;
-	}
-	m_isChecked = (value != Qt::Unchecked);
-	//adjustSize();
-	qDebug() << "revice";
-	//paintSection();
-	this->updateSection(0);
-	//emit refresh();
-	
-	update();
-	//repaint();
-	//showNormal();
-	this->updateSection(m_checkColIndex);
+	if (value == Qt::Unchecked)
+		m_isChecked = false;
+	if (value == Qt::Checked)
+		m_isChecked = true;
+	//if (value == Qt::PartiallyChecked) {
+	//	m_bTristate = true;
+	//	m_bNoChange = true;
+	//}
+	//else {
+	//	m_bNoChange = false;
+	//}
+	//m_isChecked = (value != Qt::Unchecked);
+	////adjustSize();
+	//qDebug() << "revice";
+	////paintSection();
+	//this->updateSection(0);
+	////emit refresh();
+	//
+	//update();
+	////repaint();
+	////showNormal();
+	//this->updateSection(m_checkColIndex);
+
 }

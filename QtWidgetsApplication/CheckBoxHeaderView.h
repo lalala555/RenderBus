@@ -27,13 +27,10 @@ public:
 
 	void mousePressEvent(QMouseEvent *event);
 
-	void fresh();
 	bool event(QEvent *event);
 
 signals:
 	void checkStatusChange(bool value);
-
-	void refresh();
 
 public slots:
     void  checkstate(int value);
