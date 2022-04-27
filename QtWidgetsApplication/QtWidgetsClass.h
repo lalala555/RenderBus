@@ -114,12 +114,17 @@ public slots:
 
 	void on_rightclicked();
 
+	void on_refresh();
+
 	//treewidget部分
 	//绑定treewidget的信号，根据treewidget选择的节点组装相应的路径，根据路径，userkey获得相应的文件列表并在tablewidget展示
 	void on_itemClicked(QTreeWidgetItem * item, int index);
 
 	void tableContextMenuRequested(QPoint t);
 
+signals:
+	//信号，记录tablewidget下面复选框被勾选  value(0:全选，1：半选，2：不选)
+	void checkedboxchanged(int value);
 
 
 

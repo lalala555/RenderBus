@@ -27,11 +27,16 @@ public:
 
 	void mousePressEvent(QMouseEvent *event);
 
+	void fresh();
+	bool event(QEvent *event);
+
 signals:
 	void checkStatusChange(bool value);
 
+	void refresh();
+
 public slots:
-    void  checkstate(int row,int col);
+    void  checkstate(int value);
 
 
 
@@ -40,6 +45,10 @@ private:
 	QPoint  m_topLeft;          //勾选框起始坐标
 	QSize   m_checkSize;        //勾选框大小
 	bool    m_isChecked;        //勾选框状态
+	bool    m_bPressed;
+	bool	m_bTristate;
+	bool	m_bNoChange;
+	bool    m_bMoving;
 
 
 };

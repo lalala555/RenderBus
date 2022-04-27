@@ -7,7 +7,6 @@
 #include <QJsonObject>
 #include <QEventLoop>
 #include <qurlquery.h>
-#include "QtTipsDialog.h"
 #include <QFileDialog>
 #include <QTreeWidgetItem>
 #include <QHBoxLayout>
@@ -16,6 +15,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QtSvg/QSvgRenderer>
+#include <QLabel>
 
 QtWidgetsClass::QtWidgetsClass(QWidget *parent)	: QWidget(parent)
 {
@@ -64,18 +64,20 @@ QtWidgetsClass::QtWidgetsClass(QWidget *parent)	: QWidget(parent)
 	m_checkheaderview->setStretchLastSection(true);
 	connect(m_checkheaderview, SIGNAL(checkStatusChange(bool)), this, SLOT(setAlarmListCheckState(bool)));
 	connect(m_checkheaderview, &CheckBoxHeaderView::checkStatusChange, this, &QtWidgetsClass::setAlarmListCheckState);
+
+	connect(m_checkheaderview, SIGNAL(refresh()), this, SLOT(on_refresh()));
 	
-	connect(ui.tableWidget, SIGNAL(cellClicked(int, int)), m_checkheaderview, SLOT(checkstate(int, int)));
+	//connect(ui.tableWidget, SIGNAL(cellClicked(int, int)), m_checkheaderview, SLOT(checkstate(int, int)));
 
 	//增加信号 ，当未选择复选框时下载按钮置灰
 	connect(ui.tableWidget, SIGNAL(cellClicked(int, int)), this, SLOT(on_activebutton(int, int)));
 
-
-	connect(m_checkbox, SIGNAL(stateChanged(int)), m_checkheaderview, SLOT(checkstate(int)));
+	//connect(m_checkbox, SIGNAL(stateChanged(int)), m_checkheaderview, SLOT(checkstate(int)));
 
 	//设置tablewidget不可编辑
 	ui.tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	
+	connect(this, SIGNAL(checkedboxchanged(int)), m_checkheaderview, SLOT(checkstate(int)));
 
 	m_Reply = Q_NULLPTR;
 	Init();
@@ -214,11 +216,13 @@ void QtWidgetsClass::getUserDirFile(QUrl & u, QString userkey,QString treePath)
 
 void QtWidgetsClass::showTable(QList<FileData>& datalist)
 {
+	
 	m_checkheaderview->setStyleSheet("alignment: left;");
 	ui.tableWidget->setHorizontalHeader(m_checkheaderview);
 	ui.tableWidget->horizontalHeader()->setVisible(true);
 	ui.tableWidget->setRowCount(datalist.size());
 	ui.tableWidget->setColumnCount(6);
+	
 
 	for (int i = 0; i < datalist.size(); i++)
 	{
@@ -612,13 +616,24 @@ void QtWidgetsClass::setAlarmListCheckState(bool ischeck)
 
 void QtWidgetsClass::on_activebutton(int row, int col)
 {
+	if (col != 0)
+		return;
 	QList<QString> filelist;
 	QString filename;
 	filelist = getCheckedData(filename);
-	if(filelist.size() > 0)
-		ui.pushButton_2->setEnabled(true);
+	if (filelist.size() > 0)
+	{
+	   ui.pushButton_2->setEnabled(true);
+	   if (filelist.size() == m_alldata.size())
+		   emit checkedboxchanged(2);
+	   else
+		   emit checkedboxchanged(1);
+	}
 	else
+	{
 		ui.pushButton_2->setEnabled(false);
+		emit checkedboxchanged(0);
+	}		
 }
 
 void QtWidgetsClass::on_rightclicked()
@@ -626,6 +641,23 @@ void QtWidgetsClass::on_rightclicked()
 	m_filename = ui.tableWidget->currentItem()->text();
 	m_function = 5;
 	connectToServer();
+}
+
+void QtWidgetsClass::on_refresh()
+{
+	
+	//ui.tableWidget->setHorizontalHeader(m_checkheaderview);
+//	ui.tableWidget->horizontalHeader()->setVisible(false);
+//	ui.tableWidget->horizontalHeader()->setVisible(true);
+	qDebug() << "revice";
+	m_checkheaderview->update();
+	m_checkheaderview->adjustSize();
+	//update();
+//	ui.tableWidget->setHorizontalHeader(m_checkheaderview);
+	//this->update();
+	//this->repaint();
+	//this->showNormal();
+	//this->show();
 }
 
 void QtWidgetsClass::on_itemClicked(QTreeWidgetItem * item, int index)
@@ -750,23 +782,23 @@ void QtWidgetsClass::onTextReceived(const QByteArray &data)
 		//getUserDirFile(u, m_userkey, m_treepath);
 		
 	}
-	if (path != NULL && m_function == 3)
-	{
-		QString treepath = "";
-		m_function = 4;
-		ui.tableWidget->clear();
-		QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
-		if (m_treepath == "")
-		{
-			treepath = "/";
-		}
-		else
-		{
-			treepath = QString("/%1").arg(m_treepath);
-		}
-				
-		getUserDirFile(u, m_userkey, treepath);
-	}
+	//if (path != NULL && m_function == 3)
+	//{
+	//	QString treepath = "";
+	//	m_function = 4;
+	//	//ui.tableWidget->clear();
+	//	QUrl u = QUrl("https://task.renderbus.com/api/rendering/file/operate/getUserDirFile");
+	//	if (m_treepath == "")
+	//	{
+	//		treepath = "/";
+	//	}
+	//	else
+	//	{
+	//		treepath = QString("/%1").arg(m_treepath);
+	//	}
+	//			
+	//	getUserDirFile(u, m_userkey, treepath);
+	//}
 	if (m_function == 1)
 	{
 		QList<QString> valuelist;
