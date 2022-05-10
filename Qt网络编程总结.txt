@@ -1,0 +1,53 @@
+一.QtHttp编程
+   1.用到的类
+   QNetWorkRequest，QNetWorkAccessManger,QNetWorkReply
+   2.需要引用的动态库
+   network
+   3.信号
+   QIODevice(QNetworkReply)::readyRead(); 有数据接收时，会触发信号
+   QNetWorkReply::error();有错误触发时，会触发信号
+   QNetWorkReply::sslErrors();SSL证书错误时会触发
+   QNetWorkReply::finished();完成传输后会触发次信号
+   4.流程
+   1.定义url地址，m_Request->setUrl(url);
+   2.设置请求头，m_Request->setRawHeader("signature", "rayvision2017");
+   3.设置body，QJsonObject jsonData; jsonData.insert("loginName", username);     // 设置用户名密码
+   4.设置请求方式，获得响应指针，m_Reply = m_Manager->post(*m_Request, data);
+ 
+二.QtWebSocket编程
+   1.用到的类
+   QWebSocket
+   2.需要引用的动态库
+   websocket
+   3.信号
+   QWebSocket::connect();连接服务端成功会触发；
+   QWebSocket::disconnected();断开连接会触发；
+   QWebSocket:sslErrors();SSL证书错误时会触发;
+   QWebSocket::error();有错误触发时，会触发信号;
+   QWebSocket::binaryMessagrReceived();收到二进制消息时，会触发信号；
+   QWebSocket::textMessageReceived();收到字符串消息时，会触发信号；
+   4.流程
+   1.定义url地址，连接服务器，m_websocket->open(url);
+   2.连接成功会触发成功的函数，组装json文件，给服务器发送消息，m_websocket->sendBinaryMessage(data);
+   3.收到来自服务器的消息，进行操作
+   
+三.json文件的读写
+   1.用到的类
+   QJsonDocument,QJsonArray,QJsonObject,QjsonValue
+   2.读json文件(不含集合)
+     1.读取数据; QByteArray replyData = m_Reply->readAll();
+	 2.转为QJsonDocument; QJsonDocument jsonDoc(QJsonDocument::fromJson(replyData, &json_error));
+	 3.转为QJsonObj；QJsonObject rootObj = jsonDoc.object();
+	 4.获得对应的值；QString codeStr = rootObj.value("message").toString();
+   3.读含集合的json文件
+     1.转为QJsonObj后，转为QJsonArray，QJsonObject rootObj = jsonDoc.object();QJsonArray arrObj = rootObj.value("data").toArray();
+	 2.遍历Array，得到对应的QJsonObject，QJsonObject oneObj = arrObj.at(i).toObject();
+	 3.获得对应的值；
+   4.写json文件(不含集合)
+     1.声明QJsonDocument和QJsonObject；QJsonDocument doc; QJsonObject jsonData;
+	 2.给QjsonObject添加键值对；jsonData.insert("action", "list");
+	 3.QJsonDocument来set值；doc.setObject(jsonData);
+	 4.声明QByteArray data;，给data塞值data = doc.toJson(QJsonDocument::Compact);
+   5.写含集合的json文件
+    1.先声明QJsonArray，QJSonObject；QJsonObject jsonData;	QJsonArray array;array.append(jsonData);
+	2.再次声明QJsonObject ，QJsonObject jsonData3 ， jsonData3.insert("names", array);
